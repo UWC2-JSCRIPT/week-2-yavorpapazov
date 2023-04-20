@@ -31,7 +31,7 @@ router.get("/:id", async (req, res, next) => {
     } catch(e) {
         next(e);
     }
-  });
+});
 
 router.post("/", async (req, res, next) => {
     try {
@@ -44,9 +44,43 @@ router.post("/", async (req, res, next) => {
             const savedEvent= await EventDAO.create(name, date, req.params.calendarId)
             res.json(savedEvent)
         }
-        } catch(e) {
+    } catch(e) {
         next(e);
+    }
+});
+
+router.put("/:id", async (req, res, next) => {
+    try {
+        const newEvent = req.body
+        const event = await EventDAO.getById(req.params.id);
+        if (event.calendarId !== req.params.calendarId) {
+            res.sendStatus(404);
+        } else {
+            const updatedEvent = await EventDAO.updateById(req.params.id, newEvent);
+            if (updatedEvent) {
+            res.json(updatedEvent);
+            } else {
+            res.sendStatus(404);
+            }
         }
-  });
+    } catch(e) {
+        next(e);
+    }
+});
+
+router.delete("/:id", async (req, res, next) => {
+    try {
+        const event = await EventDAO.removeById(req.params.id);
+        if (!event) {
+            res.sendStatus(404);
+        } else if (event.calendarId !== req.params.calendarId) {
+            res.sendStatus(404);
+        } else {
+            res.json(event);
+        }
+    } catch(e) {
+        next(e);
+    }
+});
 
 module.exports = router;
