@@ -23,7 +23,7 @@ router.get("/:id", async (req, res, next) => {
         const event = await EventDAO.getById(req.params.id);
         if (!event) {
             res.sendStatus(404);
-        } else if (event.calendarId !== req.params.calendarId) {
+        } else if (event.calendarId.toString() !== req.params.calendarId) {
             res.sendStatus(404);
         } else {
             res.json(event);
@@ -53,7 +53,7 @@ router.put("/:id", async (req, res, next) => {
     try {
         const newEvent = req.body
         const event = await EventDAO.getById(req.params.id);
-        if (event.calendarId !== req.params.calendarId) {
+        if (event.calendarId.toString() !== req.params.calendarId) {
             res.sendStatus(404);
         } else {
             const updatedEvent = await EventDAO.updateById(req.params.id, newEvent);
@@ -73,7 +73,7 @@ router.delete("/:id", async (req, res, next) => {
         const event = await EventDAO.removeById(req.params.id);
         if (!event) {
             res.sendStatus(404);
-        } else if (event.calendarId !== req.params.calendarId) {
+        } else if (event.calendarId.toString() !== req.params.calendarId) {
             res.sendStatus(404);
         } else {
             res.json(event);
