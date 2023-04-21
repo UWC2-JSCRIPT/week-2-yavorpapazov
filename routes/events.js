@@ -35,6 +35,10 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
     try {
+        const calendar = await CalendarDAO.getById(req.params.calendarId)
+        if (!calendar) {
+            return res.sendStatus(404);
+        }
         let { name, date } = req.body
         if (!name) {
             res.sendStatus(400)
